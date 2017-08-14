@@ -1,5 +1,6 @@
 package jp.co.rakus.stockmanagement.web;
 
+import org.postgresql.util.PSQLException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -54,15 +55,22 @@ public class MemberController {
 	@RequestMapping(value = "create")
 	public String create(@Validated MemberForm form,BindingResult result, Model model) {
 		
+		//入力値チェック
 		if(result.hasErrors()){
 			return "/member/form";
 		}
 		
+		try{
 		
 		Member member = new Member();
 		BeanUtils.copyProperties(form, member);
 		memberService.save(member);
 		return "redirect:/";
+		
+		}catch(Exception e){
+			model.addAttribute("emailDuplicationMessage","入力されたメールアドレスは既に使用されています。");
+			return form();
+		}
 	}
 	
 }

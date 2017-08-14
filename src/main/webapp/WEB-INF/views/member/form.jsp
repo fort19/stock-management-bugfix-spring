@@ -22,7 +22,8 @@
 			    </th>
 			    <td>
 			    	<form:input path="mailAddress" placeholder="Email"/>
-					<form:errors path="mailAddress" cssStyle="color:red" element="div"/>
+					<form:errors path="mailAddress" cssStyle="color:red" element="div"/><br>
+					<font color="red"><c:out value="${emailDuplicationMessage}"></c:out></font>
 			    </td>
 			  </tr>
 			  <tr>
