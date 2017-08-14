@@ -38,6 +38,9 @@
 			    </td>
 			  </tr>
 			</table>
+			<form:errors path="name" cssStyle="color:red" element="div"/>
+			<form:errors path="mailAddress" cssStyle="color:red" element="div"/>
+			<form:errors path="password" cssStyle="color:red" element="div"/>
 		  </form:form>
 		</div>
 	</div>
