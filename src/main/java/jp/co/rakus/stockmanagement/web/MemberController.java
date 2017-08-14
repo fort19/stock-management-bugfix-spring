@@ -51,12 +51,11 @@ public class MemberController {
 	 * @return ログイン画面
 	 */
 	@RequestMapping(value = "create")
-	public String create(@Validated MemberForm form, 
-			Model model) {
+	public String create(@Validated MemberForm form, Model model) {
 		Member member = new Member();
 		BeanUtils.copyProperties(form, member);
 		memberService.save(member);
-		return "book/list";
+		return "redirect:/";
 	}
 	
 }
