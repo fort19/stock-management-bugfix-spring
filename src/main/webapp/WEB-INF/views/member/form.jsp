@@ -23,7 +23,6 @@
 			    <td>
 			    	<form:input path="mailAddress" placeholder="Email"/>
 					<form:errors path="mailAddress" cssStyle="color:red" element="div"/><br>
-					<font color="red"><c:out value="${emailDuplicationMessage}"></c:out></font>
 			    </td>
 			  </tr>
 			  <tr>
@@ -33,6 +32,15 @@
 			    <td>
 			    	<form:password path="password" placeholder="Password"/>
 					<form:errors path="password" cssStyle="color:red" element="div"/>
+			    </td>
+			  </tr>
+			  <tr>
+			    <th>
+			     	 確認用パスワード
+			    </th>
+			    <td>
+			    	<form:password path="confirmPassword" placeholder="Confirm Password"/>
+ 					<form:errors path="confirmPassword" cssStyle="color:red" element="div"/>
 			    </td>
 			  </tr>
 			  <tr>
