@@ -82,11 +82,11 @@
 			      <form:input path="stock"/>
 			    </td>
 			  </tr>
+			<tr><td colspan="2"><input class="btn" type="submit" value="追加"></td></tr>
 			</table>
 			<form action="${pageContext.request.contextPath}/book/list">
 				<input type="submit" value="一覧へ戻る"/>
 			</form>		
-			<input class="btn" type="submit" value="追加">
 		</div>
 	</div>
 	</form:form>
