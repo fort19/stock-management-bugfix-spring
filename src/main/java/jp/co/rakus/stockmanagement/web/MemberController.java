@@ -1,14 +1,17 @@
 package jp.co.rakus.stockmanagement.web;
 
-import java.util.List;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,7 +66,14 @@ public class MemberController {
 	 */
 	@RequestMapping(value = "create")
 	public String create(@Validated MemberForm form, BindingResult result, Model model) {
+		
+		
+		
 
+		
+		
+		
+		
 		// 確認用パスワードの入力チェック -> エラーの場合はresultに追加
 		if (!(form.getPassword().equals(form.getConfirmPassword()))) {
 			result.rejectValue("confirmPassword", null, "確認用パスワードが違います。");
@@ -76,15 +86,20 @@ public class MemberController {
 			if (member.getMailAddress().equals(form.getMailAddress())) {
 				result.rejectValue("mailAddress", null, "入力されたメールアドレスは既に使用されています。");
 			}
-		} else {
+		} 
 
 			// 入力値チェック
 			if (result.hasErrors()) {
 				return "/member/form";
 			}
-		}
+		
 			member = new Member();
 			BeanUtils.copyProperties(form, member);
+			
+			//パスワードの暗号化
+			String password = form.getPassword();
+			String encodedPassword = new StandardPasswordEncoder().encode(password);
+			member.setPassword(encodedPassword);
 			memberService.save(member);
 			return "redirect:/";
 	}

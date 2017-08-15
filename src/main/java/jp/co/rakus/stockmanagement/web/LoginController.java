@@ -3,6 +3,7 @@ package jp.co.rakus.stockmanagement.web;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,6 +17,7 @@ import jp.co.rakus.stockmanagement.service.MemberService;
 
 /**
  * ログイン関連処理を行うコントローラー.
+ * 
  * @author igamasayuki
  *
  */
@@ -25,12 +27,13 @@ public class LoginController {
 
 	@Autowired
 	private MemberService memberService;
-	
+
 	@Autowired
 	private HttpSession session;
 
 	/**
 	 * フォームを初期化します.
+	 * 
 	 * @return フォーム
 	 */
 	@ModelAttribute
@@ -40,35 +43,56 @@ public class LoginController {
 
 	/**
 	 * ログイン画面を表示します.
+	 * 
 	 * @return ログイン画面
 	 */
 	@RequestMapping
 	public String index() {
 		return "loginForm";
 	}
-	
+
 	/**
 	 * ログイン処理を行います.
-	 * @param form　フォーム
-	 * @param result　リザルト
-	 * @param model　モデル
-	 * @return　ログイン成功時：書籍リスト画面
+	 * 
+	 * @param form
+	 *            フォーム
+	 * @param result
+	 *            リザルト
+	 * @param model
+	 *            モデル
+	 * @return ログイン成功時：書籍リスト画面
+	 */
+	/**
+	 * @param form
+	 * @param result
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping(value = "/login")
-	public String login(@Validated LoginForm form,
-			BindingResult result, Model model) {
-		if (result.hasErrors()){
+	public String login(@Validated LoginForm form, BindingResult result, Model model) {
+		if (result.hasErrors()) {
 			return index();
 		}
+
 		String mailAddress = form.getMailAddress();
 		String password = form.getPassword();
-		Member member = memberService.findOneByMailAddressAndPassword(mailAddress, password);
+		Member member = memberService.findByMailAddress(mailAddress);
+
 		if (member == null) {
 			ObjectError error = new ObjectError("loginerror", "メールアドレスまたはパスワードが違います。");
-            result.addError(error);
+			result.addError(error);
 			return index();
 		}
-		session.setAttribute("member", member);
-		return "redirect:/book/list";
+
+		boolean loginOk = new StandardPasswordEncoder().matches(password, member.getPassword());
+		if (loginOk) {
+			session.setAttribute("member", member);
+			return "redirect:/book/list";
+		}
+
+		ObjectError error = new ObjectError("loginerror", "メールアドレスまたはパスワードが違います。");
+		result.addError(error);
+		return index();
+
 	}
 }
