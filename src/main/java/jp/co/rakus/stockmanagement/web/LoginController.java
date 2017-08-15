@@ -68,7 +68,6 @@ public class LoginController {
             result.addError(error);
 			return index();
 		}
-//		model.addAttribute("member", member);
 		session.setAttribute("member", member);
 		return "redirect:/book/list";
 	}
