@@ -75,9 +75,14 @@ public class BookController {
 			return show(form.getId(), model);
 		}
 		Book book = bookService.findOne(form.getId());
-		book.setStock(form.getStock());
+		book.setStock(form.getIntStock());
 		bookService.update(book);
 		return list(model);
+	}
+	
+	@RequestMapping(value ="toAddbookJsp")
+	public String toAddBookJsp(){
+		return "book/addbook";
 	}
 
 }

@@ -21,8 +21,9 @@
 			  </tr>
 			  </c:forEach>
 			</table>
-
-
+			<form action="${pageContext.request.contextPath}/book/toAddbookJsp">
+				<input type="submit" value="書籍の追加"/>
+			</form>
 		</div>
 	</div>
 </div>
