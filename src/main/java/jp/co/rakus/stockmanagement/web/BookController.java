@@ -151,7 +151,7 @@ public class BookController {
 		try {
 			//保存場所
 			String destPath = application.getRealPath("/img/" + fileName);
-			//
+			//ファイル場所のpath情報が入ったオブジェクトを作る
 			File destFile = new File(destPath);
 			//画像を指定の場所(destFile)に移動させる
 			imageFile.transferTo(destFile);

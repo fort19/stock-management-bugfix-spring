@@ -3,7 +3,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <body>
 <div class="container">
-	<c:out value="${member.name}"/>さん　こんにちは！<br>
+	<sec:authorize access="hasRole('ROLE_MEMBER') and isAuthenticated()">
+	<sec:authentication var="memberName" property="principal.member.name" />
+	<c:out value="${memberName}" />&nbsp;さん
+	</sec:authorize> こんにちは！<br>
 	<a href="${pageContext.request.contextPath}/logout/sessionInvalidate">ログアウト</a>
 	<h3>書籍在庫数変更画面</h3>
 	<div class="span8">
