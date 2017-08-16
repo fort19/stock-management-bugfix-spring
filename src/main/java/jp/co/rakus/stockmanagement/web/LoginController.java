@@ -62,12 +62,6 @@ public class LoginController {
 	 *            モデル
 	 * @return ログイン成功時：書籍リスト画面
 	 */
-	/**
-	 * @param form
-	 * @param result
-	 * @param model
-	 * @return
-	 */
 	@RequestMapping(value = "/login")
 	public String login(@Validated LoginForm form, BindingResult result, Model model) {
 		if (result.hasErrors()) {
@@ -85,14 +79,14 @@ public class LoginController {
 		}
 
 		boolean loginOk = new StandardPasswordEncoder().matches(password, member.getPassword());
-		if (loginOk) {
-			session.setAttribute("member", member);
-			return "redirect:/book/list";
+		if (!loginOk) {
+			ObjectError error = new ObjectError("loginerror", "メールアドレスまたはパスワードが違います。");
+			result.addError(error);
+			return index();
 		}
 
-		ObjectError error = new ObjectError("loginerror", "メールアドレスまたはパスワードが違います。");
-		result.addError(error);
-		return index();
+		session.setAttribute("member", member);
+		return "redirect:/book/list";
 
 	}
 }

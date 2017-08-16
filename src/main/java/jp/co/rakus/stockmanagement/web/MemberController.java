@@ -61,14 +61,7 @@ public class MemberController {
 	 */
 	@RequestMapping(value = "create")
 	public String create(@Validated MemberForm form, BindingResult result, Model model) {
-		
-		
-		
 
-		
-		
-		
-		
 		// 確認用パスワードの入力チェック -> エラーの場合はresultに追加
 		if (!(form.getPassword().equals(form.getConfirmPassword()))) {
 			result.rejectValue("confirmPassword", null, "確認用パスワードが違います。");
@@ -77,26 +70,24 @@ public class MemberController {
 		// 入力されたメールアドレスが既に登録されたものかチェック -> エラーの場合はresultに追加
 		Member member = new Member();
 		member = memberService.findByMailAddress(form.getMailAddress());
-		if (!(member == null)) {
-			if (member.getMailAddress().equals(form.getMailAddress())) {
-				result.rejectValue("mailAddress", null, "入力されたメールアドレスは既に使用されています。");
-			}
-		} 
+		if (member != null) {
+			result.rejectValue("mailAddress", null, "入力されたメールアドレスは既に使用されています。");
+		}
 
-			// 入力値チェック
-			if (result.hasErrors()) {
-				return "/member/form";
-			}
-		
-			member = new Member();
-			BeanUtils.copyProperties(form, member);
-			
-			//パスワードの暗号化
-			String password = form.getPassword();
-			String encodedPassword = new StandardPasswordEncoder().encode(password);
-			member.setPassword(encodedPassword);
-			memberService.save(member);
-			return "redirect:/";
+		// 入力値チェック
+		if (result.hasErrors()) {
+			return "/member/form";
+		}
+
+		member = new Member();
+		BeanUtils.copyProperties(form, member);
+
+		// パスワードの暗号化
+		String password = form.getPassword();
+		String encodedPassword = new StandardPasswordEncoder().encode(password);
+		member.setPassword(encodedPassword);
+		memberService.save(member);
+		return "redirect:/";
 	}
 
 }

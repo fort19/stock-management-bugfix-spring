@@ -3,15 +3,16 @@ package jp.co.rakus.stockmanagement.repository;
 import java.util.Date;
 import java.util.List;
 
-import jp.co.rakus.stockmanagement.domain.Book;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
+
+import jp.co.rakus.stockmanagement.domain.Book;
 
 /**
  * booksテーブル操作用のリポジトリクラス.
@@ -65,5 +66,40 @@ public class BookRepository {
 				"UPDATE books SET stock=:stock WHERE id=:id",
 				param);
 		return book;
+	}
+	
+	/**
+	 * 書籍を新規追加するメソッド.
+	 * 
+	 * @param book 追加する書籍
+	 * @param id　新たに割り振る書籍id
+	 */
+	public Book save(Book book){
+		String sql = "INSERT INTO books (id, name, author, publisher, price, isbncode, saledate, explanation, image, stock) VALUES (:id, :name, :author, :publisher, :price, :isbncode, :saledate, :explanation, :image, :stock)";
+		SqlParameterSource param = new BeanPropertySqlParameterSource(book);
+		
+		if(book.getId() == null){
+			throw new NullPointerException();
+		}
+		
+		jdbcTemplate.update(sql, param);
+		
+		return book;
+		
+		
+	}
+	
+	/**
+	 * booksテーブルの中で一番大きいIdを取得
+	 * 
+	 * @return　最大Id値
+	 */
+	public Integer getMaxId(){
+		try{
+			Integer maxId = jdbcTemplate.queryForObject("select Max(id) from books;", new MapSqlParameterSource(),Integer.class);
+			return maxId;
+		}catch(DataAccessException e){
+			return null;
+		}
 	}
 }
